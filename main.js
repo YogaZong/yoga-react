@@ -2,7 +2,7 @@
  * webpack entry file
  * PS: this file would threw errors by IDE because of using JSX, just ignore all of them
  */
-import { createElement, render, Component } from './yoga-react';
+import { createElement, render, Component } from './涵涵-react';
 
 class Square extends Component {
   render() {
