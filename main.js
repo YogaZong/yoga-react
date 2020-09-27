@@ -148,3 +148,6 @@ function calculateWinner(squares) {
   }
   return null;
 }
+
+// let game = <Game />;
+// console.log('let game = <Game />; log: game.vnode', game.vnode);
