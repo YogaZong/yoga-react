@@ -12,7 +12,11 @@ class ElementWrapper {
         value
       );
     } else {
-      this.root.setAttribute(name, value);
+      if (name === 'className') {
+        this.root.setAttribute('class', value);
+      } else {
+        this.root.setAttribute(name, value);
+      }
     }
   }
 
@@ -62,8 +66,20 @@ export class Component {
   }
 
   rerender() {
-    this._range.deleteContents();
-    this[RENDER_TO_DOM](this._range);
+    // 存旧 range
+    let oldRange = this._range;
+    // 创建新的 range
+    let range = document.createRange();
+    // 新的 range 设置成旧的 range 的 start 的位置
+    range.setStart(oldRange.startContainer, oldRange.startOffset);
+    range.setEnd(oldRange.startContainer, oldRange.startOffset);
+    // 插入
+    this[RENDER_TO_DOM](range);
+
+    // 旧的 range 挪到 新的 range 插入内容之后
+    oldRange.setStart(range.endContainer, range.endOffset);
+    // 删除旧 range 的内容
+    oldRange.deleteContents();
   }
   setState(newState) {
     if (this.state === null || typeof this.state !== 'object') {
@@ -101,6 +117,9 @@ export function createElement(type, attributes, ...children) {
     for (let child of children) {
       if (typeof child === 'string') {
         child = new TextWrapper(child);
+      }
+      if (child === null) {
+        continue;
       }
       if (typeof child === 'object' && child instanceof Array) {
         insertChildren(child);
